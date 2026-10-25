@@ -17,6 +17,8 @@
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
+\usepackage{array}          % R{width}: ragged-right p-column
+\newcolumntype{R}[1]{>{\raggedright\arraybackslash}p{#1}}
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
@@ -31,7 +33,7 @@
 % GitHub account: change only these two lines
 \newcommand{\repourl}{https://github.com/FelicityT1998/md6329-check-tha}
 \newcommand{\demourl}{https://felicityt1998.github.io/md6329-check-tha/}
-\title{Seeing Surgery Coming: Pixel-Supervised Multimodal Prediction of\\ 10-Year Hip Replacement in the CHECK Study}
+\title{Seeing Surgery Coming:\\ Pixel-Supervised Multimodal Prediction of\\ 10-Year Hip Replacement in the CHECK Study}
 
 \author{%
   Tian Fengxiao \\
@@ -62,10 +64,10 @@ validation show that discrimination transports across centres but calibration do
 \input{sections/results}
 \input{sections/discussion}
 
-\paragraph{Code and demo availability.} The code behind every number and figure in this report, the LaTeX source and
+{\raggedright\paragraph{Code and demo availability.} The code behind every number and figure in this report, the LaTeX source and
 the LecTrace lecture are at \url{\repourl}. GitHub Actions deploys the lecture to GitHub Pages at \url{\demourl}; its
 source is \texttt{lectrace/01\_seeing\_surgery\_coming.py}. Raw CHECK data are not redistributed; they can be obtained
-from DANS (below).
+from DANS (below).\par}
 
 \begin{ack}
 The CHECK-cohort study is funded by the Dutch Arthritis Foundation. Involved are: Erasmus Medical Center Rotterdam;
