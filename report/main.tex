@@ -1,0 +1,79 @@
+% =============================================================================================
+% MD6329 final report, v1 (2026-10-24). Format: NeurIPS 2026 template (neurips_2026.sty, preprint option).
+% Source of truth = this file + sections/*.tex. For Overleaf, upload overleaf.zip (single-file build of this
+% document, made by build_overleaf.py) as a new project; compiler pdfLaTeX.
+% Colours: \pending{} = repeat-0-only or draft content; \todo{} = still to write.
+% =============================================================================================
+\documentclass{article}
+
+% numeric, compressed citations; must come before loading neurips_2026
+\PassOptionsToPackage{numbers, compress}{natbib}
+
+% "preprint": non-anonymous, no line numbers (a course report, not a NeurIPS submission)
+\usepackage[preprint]{neurips_2026}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[section]{placeins} % floats never drift past their section
+\graphicspath{{figs/}}
+\newcommand{\pending}[1]{\textcolor{orange}{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\title{Seeing Surgery Coming: Pixel-Supervised Multimodal Prediction of\\ 10-Year Hip Replacement in the CHECK Study}
+
+\author{%
+  Tian Fengxiao \\
+  Student ID: G2606127G \\
+  MD6329, Nanyang Technological University \\
+  \texttt{FTIAN002@e.ntu.edu.sg}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Implants now last decades. For a 45--65-year-old with early hip complaints, the clinical question is therefore not only
+whether OA is present but whether this hip will need replacing within the next ten years. We study this question in the
+CHECK study (1,002 participants, 1,705 hips, 93 replacements within ten years), using only information available at the
+first consultation. A penalised logistic model on examination and symptoms reaches AUPRC 0.37 (AUROC 0.81). Tree
+ensembles and an FT-Transformer do not improve on it, although the transformer adds better calibration and 2/5-year risk.
+Frozen ImageNet features of the baseline radiograph add nothing. A small residual head on frozen DenseNet feature maps,
+supervised with OARSI reading items used only as training targets, extracts substantial pixel signal. Its cross-fitted
+logit lifts the clinical model to AUPRC 0.55 and AUROC 0.89 in internal nested cross-validation ($\Delta$AUPRC $+0.20$,
+95\% CI 0.12--0.29); no external cohort was available. The gain persists after events in the first two years are
+excluded. A temporal audit, shortcut probes and pseudo-external
+validation show that discrimination transports across centres but calibration does not.
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/discussion}
+
+\begin{ack}
+The CHECK-cohort study is funded by the Dutch Arthritis Foundation. Involved are: Erasmus Medical Center Rotterdam;
+Kennemer Gasthuis Haarlem; Leiden University Medical Center; Maastricht University Medical Center; Martini Hospital
+Groningen/Allied Health Care Center for Rheumatology and Rehabilitation Groningen; Medical Spectrum Twente
+Enschede/Ziekenhuisgroep Twente Almelo; Reade Center for Rehabilitation and Rheumatology; St.Maartens-kliniek Nijmegen;
+University Medical Center Utrecht and Wilhelmina Hospital Assen.
+Data: DANS, doi:10.17026/DANS-XEX-HZWW (CC BY 4.0).
+\end{ack}
+
+{\small
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

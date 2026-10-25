@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+_site/
+.lectrace_cache.json
+uv.lock
+data/
+*.parquet

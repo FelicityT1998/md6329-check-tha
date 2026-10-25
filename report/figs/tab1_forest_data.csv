@@ -1,0 +1,27 @@
+panel,study,cohort,endpoint,n,ev,mod,label,auroc,lo,hi,ci,auprc,prev,val
+hip,Agricola 2013,CHECK,"THA, 5 y",1400.0,35.0,I,SSM shape modes,0.81,0.7226303921723881,0.897369607827612,hm,,0.025,apparent (GEE)
+hip,Hirvasniemi 2019,CHECK,"rHOA/THA, 10 y",987.0,435.0,C,"age, sex, BMI",0.59,0.5541734588752094,0.6258265411247905,hm,,0.44,internal CV
+hip,,,,987.0,435.0,M,+ bone texture,0.68,0.64614483286307,0.7138551671369301,hm,,0.44,internal CV
+hip,Gielis 2020,"CHECK, painful","rHOA/THA, 8 y",1044.0,185.0,C,clinical + reader scores,0.795,0.757,0.834,rep,,0.177,internal
+hip,,,,1044.0,185.0,M,+ Shape-Score,0.864,0.833,0.895,rep,,0.177,internal
+hip,Runhaar 2021,CHECK,"clin. HOA, 5-10 y",735.0,162.0,M,history+exam+X-ray,0.71,0.6616193674330547,0.7583806325669452,hm,,0.22,internal
+hip,Saberi Hosnijeh 2018,Rotterdam,"rHOA, 10 y",2327.0,,C,basic clinical,0.67,,,,,,ext. to CHECK
+hip,,,,2327.0,,M,+ imaging,0.78,,,,,,ext. to CHECK
+hip,Jang 2023,OAI,"THA, 10 y",9592.0,230.0,C,110 clinical vars,0.681,0.609,0.752,rep,0.08,0.024,held-out test
+hip,,,,9592.0,230.0,I,26 DL measurements,0.769,0.693,0.845,rep,0.22,0.024,held-out test
+hip,,,,9592.0,230.0,M,combined (GAM),0.807,0.741,0.874,rep,0.28,0.024,held-out test
+hip,van den Berg 2026,World COACH,"rHOA, 4-8 y",25090.0,1280.0,C,demographics,0.71,0.6937501888944871,0.7262498111055128,hm,,0.051,internal CV
+hip,,,,25090.0,1280.0,I,DL features,0.81,0.7954853375708615,0.8245146624291386,hm,,0.051,internal CV
+hip,,,,25090.0,1280.0,M,"hybrid, LOCO (mean ± SD)",0.64,0.55,0.73,sd,,0.051,LOCO
+hip,Hidaka 2024,"Japan, 1 centre","KL>=3, 5 y",703.0,203.0,M,CNN + GBDT,0.846,0.8104259866681724,0.8815740133318275,hm,,0.2887624466571835,5-fold CV
+knee,Tiulpin 2019,OAI -> MOST,KL progression,3918.0,1501.0,C,"clinical, no KL (LR)",0.68,0.66,0.69,rep,0.56,0.3831036242981113,external
+knee,,,,3918.0,1501.0,I,"CNN, image only",0.79,0.77,0.8,rep,0.68,0.3831036242981113,external
+knee,,,,3918.0,1501.0,M,CNN + clinical (GBM),0.79,0.78,0.81,rep,0.68,0.3831036242981113,external
+knee,Musbahi 2026,MOST -> OAI,TKA,,,M,DenseNet-201 + clinical,0.85,,,,0.62,0.1,internal
+knee,,,,,,M,"same, external OAI",0.79,,,,,,external
+knee,Castagno 2025,OAI (FNIH),"rapid progr., 2 y",,,C,clinical-only autoML,,,,,0.764,,external
+ours,This study,CHECK,"THA, 10 y",1705.0,93.0,C,M0 clinical elastic net,0.8069992529149659,0.7708,0.8676,rep,0.3660798251386003,0.05454545454545454,nested CV
+ours,,,,1705.0,93.0,M,M0 + frozen DenseNet (v1),0.8198724619120041,0.777,0.8729,rep,0.3857489566440669,0.05454545454545454,nested CV
+ours,,,,1705.0,93.0,I,residual image head only,0.8656717027358105,0.8344,0.9166,rep,0.4905890253573616,0.05454545454545454,nested CV
+ours,,,,1705.0,93.0,M,M0 + pixel logit (final),0.8920382080631821,0.8606,0.9355,rep,0.5518392548025568,0.05454545454545454,nested CV
+ours,,,,1705.0,92.0,C,"M0, leave-one-centre-out",0.8032377861662547,0.7484365888331631,0.8580389834993464,hm,0.3736483981988994,0.05454545454545454,pseudo-external

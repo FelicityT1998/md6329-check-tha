@@ -1,0 +1,192 @@
+% =============================================================================================
+% 4 Discussion + 5 Conclusion (v2, 2026-10-24 evening). Literature comparisons moved here from Results.
+% =============================================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{The clinical model against prior work.}
+Examination and symptoms carried the clinical signal: demographics alone reached AUPRC 0.09, adding the examination 0.29
+and adding symptoms 0.39, whereas care, social and biomarker groups added nothing. The resulting elastic net (AUROC 0.81)
+is well above the clinical GAM of the OAI study (0.68; Table~\ref{tab:main})~\cite{jang2023}. The difference is
+plausibly the cohort rather than the learner. OAI is a knee cohort with little hip-specific examination, whereas CHECK
+recorded a standardised hip examination and hip-specific questionnaires in people who presented early with hip
+complaints. Restricted, painful internal rotation is part of the clinical definition of hip OA~\cite{altman1991acr}, and
+in our data it carries more information than generic symptom scales. Deep tabular models did not beat the penalised
+linear model at 93 events, as expected from the comparison literature~\cite{christodoulou2019}. The FT-Transformer's
+contribution is a better calibration slope (1.04 against 0.84) and usable 2- and 5-year rankings.
+
+\begin{table}[!tbp]
+  \centering
+  \caption{\textbf{Main-model performance against published multimodal models.} Our rows are internal estimates: means
+  over five repeats of 5-fold nested CV, with 95\% CIs from a participant-clustered bootstrap of repeat 0. Lift = AUPRC
+  $\div$ event rate. Literature values are from the abstracts and, where available, the full texts. \textsuperscript{\dag}Different endpoint
+  (radiographic OA or KL progression); shown for scale only.}
+  \label{tab:main}
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    Study / model & Cohort, endpoint & Event rate & AUPRC (95\% CI) & Lift & AUROC (95\% CI) \\
+    \midrule
+    Jang 2023, clinical GAM~\cite{jang2023} & OAI, THA 10 y & 2.4\% & 0.08 & 3.3 & 0.68 \\
+    Jang 2023, clinical + DL measurements & OAI, THA 10 y & 2.4\% & 0.28 & 11.7 & 0.81 \\
+    Musbahi 2026, DenseNet-201 + clinical~\cite{musbahi2026} & MOST, TKA & $\approx$10\% & 0.62 & 6.2 & 0.85 (ext.\ 0.79) \\
+    Gielis 2020, clinical + Shape-Score~\cite{gielis2020}\textsuperscript{\dag} & CHECK, rHOA/THA 8 y & 17.7\% & -- & -- & 0.864 (0.833--0.895) \\
+    van den Berg 2026, hybrid~\cite{vandenberg2026}\textsuperscript{\dag} & 7 cohorts, rHOA 4--8 y & 5.1\% & -- & -- & 0.81 (LOCO 0.64) \\
+    Tiulpin 2019, CNN + clinical~\cite{tiulpin2019}\textsuperscript{\dag} & OAI$\to$MOST, knee KL & 38\% & 0.68 (0.66--0.70) & 1.8 & 0.79 (0.78--0.81) \\
+    \midrule
+    \textbf{M0} clinical elastic net & CHECK, THA 10 y & 5.5\% & 0.366 (0.281--0.487) & 6.7 & 0.807 (0.771--0.868) \\
+    M0 + frozen DenseNet PCA-32 (v1) & CHECK, THA 10 y & 5.5\% & 0.386 (0.301--0.499) & 7.1 & 0.820 (0.777--0.873) \\
+    \textbf{M0 + pixel logit (final)} & CHECK, THA 10 y & 5.5\% & \textbf{0.552} (0.472--0.685) & \textbf{10.1} & \textbf{0.892} (0.861--0.936) \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\paragraph{Transport across centres.}
+Discrimination transported across pseudo-centres: under leave-one-centre-out validation M0 kept its AUPRC (0.374 against
+0.377 internally) and lost 0.02 AUROC, and the image head lost 0.02 AUROC. Published hip models fare worse under the
+same design. A seven-cohort model fell from AUROC 0.81 to 0.64 under leave-one-cohort-out validation~\cite{vandenberg2026},
+and a knee surgical model fell from 0.85 to 0.79 externally~\cite{musbahi2026}. Clinical-only knee models are known to
+transport well~\cite{castagno2025}, and our result extends this to the hip with a standardised examination. The
+comparison flatters us, however. Our pseudo-centres share country, era, protocol and readers, so the shift between them
+is milder than between cohorts. Calibration did not transport (intercepts $-1.6$ to $+1.4$; painless hips
+over-predicted), and image discrimination was sensitive to film format. Local recalibration is therefore a precondition
+for use, as for most prediction models~\cite{steyerberg2016validation}.
+
+\paragraph{The image numbers in a rare-event setting.}
+At a 5.5\% event rate, an image-only AUROC of 0.87 and a fusion gain of $+0.20$ AUPRC (0.37 $\to$ 0.55) must be read on
+the precision scale. The highest attainable lift is the inverse of the event rate: 18 here and 42 in OAI. Our fused lift
+of 10.1 thus uses about half of the available range, and Jang's 11.7 about a quarter of its range. The image-only head
+(lift 9.0) matches Jang's measurement model (9.2) at twice the event rate (Table~\ref{tab:image}). The more
+important question is where the gain comes from. Radiographic severity is a core indication for THA: surgeons offer
+replacement when symptoms persist \emph{and} the film shows advanced joint damage~\cite{gademan2016indication}. The
+baseline film therefore carries part of the decision that defines the outcome, and the gain is concentrated in hips
+replaced within 1--3 years (AUROC 0.90--0.98 for every model). In our reading, the improvement reflects what the image
+contains rather than an advantage of attention as a mechanism. The architecture mattered only for extraction. The same
+pixels gave AUPRC 0.12 through frozen pooled features and 0.49 through the spatial head.
+
+\begin{table}[!tbp]
+  \centering
+  \caption{\textbf{Image-only performance.} Same conventions as Table~\ref{tab:main}.
+  \textsuperscript{\dag}Different endpoint (shown for scale only).}
+  \label{tab:image}
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    Study / model & Cohort, endpoint & Event rate & AUPRC (95\% CI) & Lift & AUROC (95\% CI) \\
+    \midrule
+    Agricola 2013, shape modes (apparent)~\cite{agricola2013} & CHECK, THA 5 y & 2.5\% & -- & -- & 0.81 \\
+    Jang 2023, 26 DL measurements~\cite{jang2023} & OAI, THA 10 y & 2.4\% & 0.22 & 9.2 & 0.77 \\
+    van den Berg 2026, DL features~\cite{vandenberg2026}\textsuperscript{\dag} & 7 cohorts, rHOA 4--8 y & 5.1\% & -- & -- & 0.81 \\
+    Tiulpin 2019, CNN~\cite{tiulpin2019}\textsuperscript{\dag} & OAI$\to$MOST, knee KL & 38\% & 0.68 (0.66--0.70) & 1.8 & 0.79 (0.77--0.80) \\
+    \midrule
+    Frozen DenseNet-121, GAP + PCA-32 & CHECK, THA 10 y & 5.5\% & 0.122 (0.098--0.222) & 2.2 & 0.687 (0.649--0.758) \\
+    Linear head on GAP features & CHECK, THA 10 y & 5.5\% & 0.228 (0.176--0.370) & 4.2 & 0.769 (0.723--0.829) \\
+    \textbf{Residual head + OARSI targets} & CHECK, THA 10 y & 5.5\% & \textbf{0.491} (0.403--0.624) & \textbf{9.0} & \textbf{0.866} (0.834--0.917) \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\paragraph{Why the image head works, and what it may be reading.}
+Several observations support a genuine pixel signal. Most of the gain came from the spatial residual stage (linear
+$\to$ residual: $+0.27$ AUPRC). Attention concentrated on the superolateral joint space, the typical site of early
+narrowing in hip OA. The head recovered OARSI items better than frozen features did (KL $\rho$ 0.31 $\to$ 0.45). A head
+trained without the reading targets fused equally well (AUPRC 0.527 against 0.552), and without THA in years 1--2 the
+fusion gain remained $+0.20$. Other observations argue for caution. False positives were KL 1--2 hips with attention in
+the same place. This suggests the head encodes radiographic stage, which is partly the surgeon's decision rule, rather
+than biology that predicts progression. In missed hips the attention drifted away from the joint, but confining it to
+the joint did not recover them. The drift is therefore a symptom of finding no signal, not the cause of the miss.
+Crop embeddings still identified the centre and the format. Attention maps are descriptive, not attributions. With observational data we cannot separate these explanations causally.
+
+\paragraph{Why token fusion failed.}
+Fusing the image as one FT-Transformer token lowered AUPRC by 0.13 relative to M0. The likely cause is the input to
+the token, not the transformer. M4 received the frozen embedding after global pooling and PCA to 32 dimensions. That
+signal was weak on its own (AUPRC 0.12), because pooling discards the location of millimetre-scale joint-space changes.
+The token's input LayerNorm then normalised each hip's 32-vector, which removes its magnitude. With about 60 events
+per training fold, the attention layers had to learn a cross-modal interaction from a weak, noisy token. A follow-up
+run supports this reading. Feeding the cross-fitted pixel logit as the token (with the LayerNorm bypassed) raised the
+FT-Transformer from 0.323 to 0.471 AUPRC ($+0.147$, 0.038--0.250; AUROC 0.848, calibration slope 0.99). Its 10-year
+discrete-time risk reached AUROC 0.83. It remained below the elastic-net fusion ($-0.095$, $-0.150$ to $-0.043$). The
+transformer is therefore not useless, but at this sample size an extra layer of interactions costs more than it gains.
+
+\paragraph{Clinical implications.}
+The model gives a first-visit risk score from routine data and the raw film, without a radiologist's grading. Its
+intended uses are setting the intensity of conservative care and the review interval, timing referral, and enriching
+joint-preservation trials with high-risk hips. It adds little for hips already on a surgical pathway, where THA follows
+within two years and any model performs well. Before use elsewhere it needs local recalibration, especially for hips
+without pain.
+
+\paragraph{Limitation 1: data scale against model capacity.}
+Deep networks learn their representations from very large data sets: ImageNet has 1.2 million labelled images. We
+have 1,705 hips with known outcome, and for a binary outcome the effective sample size is closer to the 93 events. On
+the course's rule of thumb (Lecture 2, slide 107), our 1,968 films sit in the regime where fine-tuning works, but the
+93 positives sit in the ``marginal'' range of high dozens to low hundreds. We therefore never trained a deep network
+end to end. The image backbone was pretrained on ImageNet and frozen. Only a
+0.21\,M-parameter head was trained on pixels, and the FT-Transformer had 34k--56k parameters. Even so, the
+FT-Transformer did not beat a penalised linear model, its repeats were unstable until seeds were averaged, and the
+fusion model's calibration slope of 0.79 shows residual overfitting. The event count, not the architecture, limits
+what this study can show about deep models. It does not explain the AUPRC level, which is bounded by the 5.5\% event
+rate, as discussed above.
+
+\paragraph{Further limitations of the statistical design.}
+Three further issues could not be resolved within this study. First, events per parameter: 93 events against 76
+features plus missing indicators is about one event per candidate parameter, below current
+guidance~\cite{riley2020samplesize}. Penalisation limits overfitting but does not remove it. Second, imputation: fold-wise MICE is a single imputation under a missing-at-random assumption, so it understates
+uncertainty. It also excludes the outcome, which biases imputed predictors' effects towards zero~\cite{moons2006imputation,
+vanbuuren2011mice}. Collinearity is a minor concern here. BayesianRidge shrinks correlated predictors, and correlated
+predictors make imputation more accurate. Because only 2--5\% of values were imputed, the impact is small. Third,
+censoring: excluding the 299 hips censored before year 10 conditions on follow-up, and death as a competing risk was
+not recorded.
+
+\paragraph{Limitations of the image supervision and the stacking.}
+The OARSI targets may reduce generalisation. They encode the conventions of CHECK's readers and a paired reading with
+later films~\cite{macri2022}, so the head may learn features that do not transfer to cohorts read differently. World
+COACH faced the same issue: its best image features were optimised with follow-up grades~\cite{vandenberg2026}. Our
+no-target head matched discrimination internally, but its transport was not tested externally. The cross-fitting
+itself does not leak test labels. Each training hip's logit comes from a head that never saw that hip, test hips are
+scored by a head trained only on training hips, and test labels are used only for evaluation. Two weaker effects
+remain. Training logits come from heads fitted on two thirds of the data, so their scale differs slightly from the test
+logits. During inner tuning, inner-validation labels have shaped other training hips' logits. Both effects can bias
+the choice of hyper-parameters, but not the outer-fold estimate.
+
+\paragraph{Limitations of late fusion.}
+The final model fuses late: the image head is trained on pixels alone, and its logit enters the elastic net as one
+feature. Because the logit is fitted jointly with the clinical features, its coefficient is already adjusted for
+their linear correlation. Late fusion still has two costs. The head never sees the clinical context, so part of what
+it learns duplicates the examination. And a single linear term cannot express interactions, for example a pixel
+signal that matters more in painful hips. Joint fusion is the alternative. Here it lost at this sample size, both as a
+frozen-embedding token and FiLM (M4) and as a pixel-logit token (AUPRC 0.471 against 0.552). Training the head on the
+residual of the clinical model, or adding pre-specified interaction terms, are cheaper middle grounds for future work.
+
+\paragraph{Limitations of the cohort.}
+CHECK enrolled Dutch adults aged 45--65 with early complaints between 2002 and 2005. Of these, 79\% were women and 97\%
+were white, and more than half had not seen any health professional for the complaint in the year before baseline.
+Referral passes through general practitioners, and both the threshold for surgery and access to it are specific to
+that health system and era. The model may therefore not hold for older patients, for populations with different hip
+morphology or OA prevalence (for example, East Asian cohorts with more dysplasia-related OA), or where access to
+surgery differs. Validation was internal only. The pseudo-centres were reconstructed from device serials, two of them
+impurely. Label-free steps (orientation, locator, SimCLR, AdaBN) were fitted on all films.
+
+\paragraph{Future work.}
+The first priority is external validation, in OAI hip films and in the World COACH consortium. Both would test format
+and population transport, and both would show whether local recalibration is enough. On the imaging side, end-to-end
+fine-tuning with an L2-SP penalty would let the backbone adapt to radiographs without forgetting its pretraining.
+Higher resolution ($28\times28$ maps or $512^2$ crops) would target cysts and head flattening, which the current map
+resolves poorly. Explicit geometric measurements (lateral centre-edge angle, $\alpha$ angle, minimum joint-space width)
+would make the pixel score interpretable, and a contralateral-hip reference could separate a person's anatomy from
+disease. Format harmonisation should reduce the TIFF/DICOM gap. Finally, decision thresholds should be set with
+clinicians through decision-curve analysis rather than chosen by us.
+
+\section{Conclusion}
+\label{sec:conclusion}
+We asked whether a first-consultation hip can be scored for ten-year replacement risk from routine information alone. In
+the CHECK study, a penalised logistic model on the standardised hip examination and symptoms already discriminates well
+(AUROC 0.81), and deep tabular models do not improve on it at 93 events. Frozen ImageNet features of the baseline film
+add nothing. A small residual head that keeps the spatial map of a frozen DenseNet, trained with OARSI items as
+targets only, extracts a strong pixel signal. Fused as one cross-fitted logit, it raises AUPRC from 0.37 to 0.55 in
+internal validation, and the gain survives the exclusion of early events. Much of this signal reflects radiographic
+stage, which is itself a criterion for surgery. Discrimination transported across pseudo-centres, but calibration did
+not. The model is therefore a candidate for external validation and local recalibration, not a finished tool.

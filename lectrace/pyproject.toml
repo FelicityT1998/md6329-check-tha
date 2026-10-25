@@ -1,0 +1,24 @@
+﻿[project]
+name = "md6329-hip-lectrace"
+version = "0.1.0"
+description = "LecTrace lecture: pixel-supervised prediction of 10-year hip replacement in the CHECK study"
+requires-python = ">=3.11"
+dependencies = [
+    "lectrace>=1.1.30",
+    "torch>=2.0",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "pillow>=10",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

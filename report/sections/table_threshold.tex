@@ -1,0 +1,25 @@
+\begin{table}[!tbp]
+  \centering
+  \caption{\textbf{Threshold metrics at two operating points.} Left: calibrated risk $\ge$10\%, the threshold of the
+  decision curve (the share of hips flagged depends on calibration). Right: the 10\% of hips with the highest risk (a
+  fixed workload of about 170 hips, independent of calibration). Sensitivity, precision (positive predictive value) and
+  Matthews correlation coefficient (MCC) are computed per repeat on pooled out-of-fold predictions and averaged over five
+  repeats; the event rate is 5.5\%. The image head is calibrated on its cross-fitted inner predictions.}
+  \label{tab:threshold}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lccccccc@{}}
+    \toprule
+    & \multicolumn{4}{c}{Risk $\ge$ 10\%} & \multicolumn{3}{c}{Top 10\% of hips} \\
+    \cmidrule(lr){2-5}\cmidrule(l){6-8}
+    Model & Flagged & Sens. & Prec. & MCC & Sens. & Prec. & MCC \\
+    \midrule
+    M0 elastic net (clinical) & 14\% & 0.54 & 0.20 & 0.27 & 0.47 & 0.26 & 0.30 \\
+    M1 LightGBM & 14\% & 0.54 & 0.21 & 0.28 & 0.48 & 0.26 & 0.30 \\
+    M1b EBM & 13\% & 0.52 & 0.21 & 0.27 & 0.46 & 0.25 & 0.28 \\
+    M2 FT-Transformer & 11\% & 0.48 & 0.23 & 0.28 & 0.46 & 0.25 & 0.29 \\
+    M3 image head (pixels only) & 7\% & 0.54 & 0.41 & 0.44 & 0.61 & 0.34 & 0.41 \\
+    \textbf{M0 + pixel logit (final)} & \textbf{9\%} & \textbf{0.62} & \textbf{0.38} & \textbf{0.45} & \textbf{0.65} & \textbf{0.35} & \textbf{0.44} \\
+    \bottomrule
+  \end{tabular}
+\end{table}

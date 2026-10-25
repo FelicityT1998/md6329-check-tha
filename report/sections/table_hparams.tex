@@ -1,0 +1,34 @@
+% Table 2: final hyper-parameters. Sources: hpo/*.csv, oof/*_selection.csv, nas_stage1_DESCLB.csv, 08_imghead.py, lib_ftt.py
+\begin{table}[!tbp]
+  \centering
+  \caption{\textbf{Search spaces and selected hyper-parameters.} ``Selected'' gives the configuration chosen most often
+  across the 25 outer folds (count in brackets). M2's stage-2 choice varies by fold, so all three architectures are
+  listed. The image head used fixed settings, chosen before training and not tuned per fold.}
+  \label{tab:hparams}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{0.13\linewidth}p{0.40\linewidth}p{0.42\linewidth}@{}}
+    \toprule
+    Model & Search space & Selected / fixed \\
+    \midrule
+    M0 elastic net & 40 configs: $C\in[1.5\cdot10^{-3},9.6]$ (log), $\ell_1$ ratio $\{0,.1,.3,.5,.7,.9,1\}$, class
+      weight \{none, balanced\}; SAGA & $C=0.012$, $\ell_1$ ratio 0.1, unweighted (10/25); next $C=0.082$, $\ell_1$ 0.3
+      (6/25). The fusion model reuses this grid \\
+    M1 LightGBM & 60 configs: leaves 4--31, depth 2--6, lr 0.01--0.10, min child 10--80, $\lambda_2$ 0.015--30,
+      scale\_pos\_weight 1--20; early stop 100 rounds & leaves 31, depth 2, lr 0.042, min child 80, subsample 0.89,
+      colsample 0.84, $\lambda_2$ 13.3, $\lambda_1$ 2.4, unweighted (5/25); median 232 trees \\
+    M1b EBM & interactions \{0, 5\} $\times$ lr \{0.005, 0.02\}; 64 bins, min leaf 10, 8 outer bags & no interactions,
+      lr 0.005 (16/25) \\
+    M2 FT-Transformer & stage 1: 48 of $d\in\{16..64\}$, $L\in\{1,2,3\}$, heads \{2,4,8\}, FFN $\times$\{1, 4/3, 2\},
+      dropouts 0--0.3, tokeniser \{linear, periodic, PLE\}, readout \{[CLS], mean\}, group emb.\ \{no, yes\}, loss
+      \{wBCE, focal $\gamma$=1, 2\}; stage 2: top-3 $\times$ lr $\{3\!\cdot\!10^{-4},10^{-3}\}$ $\times$ wd
+      $\{10^{-5},10^{-4}\}$ & \#40: $d$=64, $L$=1, 8 heads, [CLS], wBCE, 33.6k params (11/25); \#13: $d$=48, $L$=3, 4
+      heads, mean, wBCE, 53.9k (9/25); \#34: $d$=48, $L$=2, 4 heads, mean, focal $\gamma$=2, 38.0k (5/25). All: linear
+      tokeniser, group embedding, $\lambda$=1, pos\_weight 5, DT bias $-5.3$, AdamW, $\le$200 epochs, early stop on total
+      loss (patience 20), 3 seeds $\times$ 3 inner folds \\
+    M3 image head & fixed & frozen DenseNet-121 to block 3; 64 ch.; 2 residual blocks; attention + GAP; dropout 0.3,
+      Dropout2d 0.1; AdamW lr $10^{-3}$, wd $10^{-3}$, batch 64, 30 epochs, 3-epoch warm-up + cosine; $\lambda_{\text{aux}}$=1,
+      pos\_weight 5; 0.21\,M trainable params \\
+    \bottomrule
+  \end{tabular}
+\end{table}
