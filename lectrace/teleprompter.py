@@ -141,6 +141,12 @@ def build(out):
         pg.goto(tmp.resolve().as_uri())
         pg.pdf(path=out, prefer_css_page_size=True, print_background=True)
         b.close()
+    lines = ["# Presentation script: Seeing Surgery Coming (LecTrace)", "",
+             "One block per action. ⇧→ = Shift+Right (step over), → = step into, u = step out. "
+             "Phone teleprompter version: `LecTrace_teleprompter_phone.pdf`.", ""]
+    for i, (sec, key, see, say) in enumerate(PAGES[1:], 1):
+        lines += [f"### {i}. {sec} · {key}", f"*On screen: {see}*", "", say.replace("<br>", " "), ""]
+    pathlib.Path(out).with_name("presentation_script.md").write_text("\n".join(lines), encoding="utf8")
     words = sum(len(s.replace("**", "").split()) for _, _, _, s in PAGES[1:])
     print(f"{n} pages, {words} spoken words (~{words / 110:.1f} min at 110 wpm) -> {out}")
 
