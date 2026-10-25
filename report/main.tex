@@ -28,6 +28,9 @@
 \graphicspath{{figs/}}
 \newcommand{\pending}[1]{\textcolor{orange}{#1}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+% GitHub account: change only these two lines
+\newcommand{\repourl}{https://github.com/GITHUB_USER/md6329-check-tha}
+\newcommand{\demourl}{https://GITHUB_USER.github.io/md6329-check-tha/}
 \title{Seeing Surgery Coming: Pixel-Supervised Multimodal Prediction of\\ 10-Year Hip Replacement in the CHECK Study}
 
 \author{%
@@ -58,6 +61,11 @@ validation show that discrimination transports across centres but calibration do
 \input{sections/methods}
 \input{sections/results}
 \input{sections/discussion}
+
+\paragraph{Code and demo availability.} The code behind every number and figure in this report, the LaTeX source and
+the LecTrace lecture are at \url{\repourl}. GitHub Actions deploys the lecture to GitHub Pages at \url{\demourl}; its
+source is \texttt{lectrace/01\_seeing\_surgery\_coming.py}. Raw CHECK data are not redistributed; they can be obtained
+from DANS (below).
 
 \begin{ack}
 The CHECK-cohort study is funded by the Dutch Arthritis Foundation. Involved are: Erasmus Medical Center Rotterdam;
