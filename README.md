@@ -3,7 +3,7 @@
 Pixel-supervised multimodal prediction of 10-year hip replacement in the CHECK study.
 MD6329 final project, Tian Fengxiao (G2606127G), Nanyang Technological University.
 
-- **LecTrace lecture (live):** https://GITHUB_USER.github.io/REPO_NAME/
+- **LecTrace lecture (live):** https://felicityt1998.github.io/md6329-check-tha/
 - **Lecture source:** [`lectrace/01_seeing_surgery_coming.py`](lectrace/01_seeing_surgery_coming.py)
 - **Report source:** [`report/`](report/) (NeurIPS 2026 template; `python -I report/build_overleaf.py report` makes a single-file Overleaf upload)
 
